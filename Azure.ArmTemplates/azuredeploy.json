@@ -31,7 +31,7 @@
       "type": "String"
     },
     "workspaces_defaultworkspace": {
-      "defaultValue": "",
+      "defaultValue": "Read_from_workspace_variable",
       "type": "String"
     }
   },
