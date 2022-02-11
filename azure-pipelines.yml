@@ -1,30 +1,24 @@
-
-trigger:
-- main
-
 pool:
-  vmImage: ubuntu-latest
-
-variables:
-  buildConfiguration: 'Release'
-
+  vmImage: 'windows-latest'
 steps:
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    publishWebProjects: false
-    projects: "**/*.csproj"
-    arguments: '--configuration ${buildConfiguration}'
-
+- script: |
+    dotnet restore
+    dotnet build --configuration Release
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
+    arguments: '--configuration Release --output publish_output'
+    projects: '*.csproj'
     publishWebProjects: false
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-
-# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishPipelineArtifact@1
+    modifyOutputPath: false
+    zipAfterPublish: false
+- task: ArchiveFiles@2
+  displayName: "Archive files"
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)' 
+    rootFolderOrFile: "$(System.DefaultWorkingDirectory)/publish_output"
+    includeRootFolder: false
+    archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
     artifactName: 'drop'
