@@ -3,25 +3,25 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "subscriptionId": {
-      "value": "Read from devops pipeline"
+      "value": "Read_from_devops_pipeline"
     },
     "name": {
-      "value": "Read from devops pipeline"
+      "value": "Read_from_devops_pipeline"
     },
     "location": {
-      "value": "Read from devops pipeline"
+      "value": "Read_from_devops_pipeline"
     },
     "hostingPlanName": {
-      "value": "Read from devops pipeline"
+      "value": "Read_from_devops_pipeline"
     },
     "serverFarmResourceGroup": {
-      "value": "Read from devops pipeline"
+      "value": "Read_from_devops_pipeline"
     },
     "alwaysOn": {
       "value": false
     },
     "storageAccountName": {
-      "value": "Read from devops pipeline"
+      "value": "Read_from_devops_pipeline"
     },
     "use32BitWorkerProcess": {
       "value": true
