@@ -19,5 +19,8 @@ steps:
     arguments: '--configuration ${buildConfiguration} --output ${Build.ArtifactStagingDirectory}'
     zipAfterPublish: true
 
-- publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-  artifact: drop
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
