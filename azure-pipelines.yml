@@ -9,18 +9,23 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'publish'
+    command: 'build'
     publishWebProjects: false
     projects: "**/*.csproj"
-    arguments: '--configuration ${buildConfiguration} --output ${Build.ArtifactStagingDirectory}'
-    zipAfterPublish: true
+    arguments: '--configuration ${buildConfiguration} --output ${Build.BinariesDirectory}/publish_output'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)/publish_output'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
   inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-    targetPath: '$(Build.ArtifactStagingDirectory)'
