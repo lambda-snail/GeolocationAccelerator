@@ -1,895 +1,140 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "sites_func_crm_geolocation_name": {
-      "defaultValue": "func-crm-geolocation",
-      "type": "String"
+    "subscriptionId": {
+      "type": "string"
     },
-    "serverfarms_asp_rgcrmgeolocation_name": {
-      "defaultValue": "asp-rgcrmgeolocation",
-      "type": "String"
+    "name": {
+      "type": "string"
     },
-    "components_func_crm_geolocation_name": {
-      "defaultValue": "func-crm-geolocation",
-      "type": "String"
+    "location": {
+      "type": "string"
     },
-    "storageAccounts_stcrmgeolocation_name": {
-      "defaultValue": "stcrmgeolocation",
-      "type": "String"
+    "hostingPlanName": {
+      "type": "string"
     },
-    "databaseAccounts_cosmos_crm_geolocation_name": {
-      "defaultValue": "cosmos-crm-geolocation",
-      "type": "String"
+    "serverFarmResourceGroup": {
+      "type": "string"
     },
-    "actionGroups_Application_Insights_Smart_Detection_name": {
-      "defaultValue": "Application Insights Smart Detection",
-      "type": "String"
+    "alwaysOn": {
+      "type": "bool"
     },
-    "smartdetectoralertrules_failure_anomalies___func_crm_geolocation_name": {
-      "defaultValue": "failure anomalies - func-crm-geolocation",
-      "type": "String"
+    "use32BitWorkerProcess": {
+      "type": "bool"
     },
-    "workspaces_defaultworkspace": {
-      "defaultValue": "Read_from_workspace_variable",
-      "type": "String"
+    "storageAccountName": {
+      "type": "string"
+    },
+    "netFrameworkVersion": {
+      "type": "string"
     }
   },
   "variables": {},
   "resources": [
     {
-      "type": "Microsoft.DocumentDB/databaseAccounts",
-      "apiVersion": "2021-10-15",
-      "name": "[parameters('databaseAccounts_cosmos_crm_geolocation_name')]",
-      "location": "West Europe",
-      "tags": {
-        "defaultExperience": "Core (SQL)",
-        "hidden-cosmos-mmspecial": ""
-      },
-      "kind": "GlobalDocumentDB",
-      "identity": {
-        "type": "None"
-      },
-      "properties": {
-        "publicNetworkAccess": "Enabled",
-        "enableAutomaticFailover": false,
-        "enableMultipleWriteLocations": false,
-        "isVirtualNetworkFilterEnabled": false,
-        "virtualNetworkRules": [],
-        "disableKeyBasedMetadataWriteAccess": false,
-        "enableFreeTier": true,
-        "enableAnalyticalStorage": false,
-        "analyticalStorageConfiguration": {
-          "schemaType": "WellDefined"
-        },
-        "databaseAccountOfferType": "Standard",
-        "defaultIdentity": "FirstPartyIdentity",
-        "networkAclBypass": "None",
-        "disableLocalAuth": false,
-        "consistencyPolicy": {
-          "defaultConsistencyLevel": "Session",
-          "maxIntervalInSeconds": 5,
-          "maxStalenessPrefix": 100
-        },
-        "locations": [
-          {
-            "locationName": "West Europe",
-            "provisioningState": "Succeeded",
-            "failoverPriority": 0,
-            "isZoneRedundant": false
-          }
-        ],
-        "cors": [],
-        "capabilities": [],
-        "ipRules": [],
-        "backupPolicy": {
-          "type": "Periodic",
-          "periodicModeProperties": {
-            "backupIntervalInMinutes": 1440,
-            "backupRetentionIntervalInHours": 48,
-            "backupStorageRedundancy": "Local"
-          }
-        },
-        "networkAclBypassResourceIds": [],
-        "capacity": {
-          "totalThroughputLimit": 4000
-        }
-      }
-    },
-    {
-      "type": "microsoft.insights/actionGroups",
-      "apiVersion": "2021-09-01",
-      "name": "[parameters('actionGroups_Application_Insights_Smart_Detection_name')]",
-      "location": "Global",
-      "properties": {
-        "groupShortName": "SmartDetect",
-        "enabled": true,
-        "emailReceivers": [],
-        "smsReceivers": [],
-        "webhookReceivers": [],
-        "eventHubReceivers": [],
-        "itsmReceivers": [],
-        "azureAppPushReceivers": [],
-        "automationRunbookReceivers": [],
-        "voiceReceivers": [],
-        "logicAppReceivers": [],
-        "azureFunctionReceivers": [],
-        "armRoleReceivers": [
-          {
-            "name": "Monitoring Contributor",
-            "roleId": "749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-            "useCommonAlertSchema": true
-          },
-          {
-            "name": "Monitoring Reader",
-            "roleId": "43d0d8ad-25c7-4714-9337-8ba259a9fe05",
-            "useCommonAlertSchema": true
-          }
-        ]
-      }
-    },
-    {
-      "type": "microsoft.insights/components",
-      "apiVersion": "2020-02-02",
-      "name": "[parameters('components_func_crm_geolocation_name')]",
-      "location": "westeurope",
-      "tags": {
-        "environment": "dev"
-      },
-      "kind": "web",
-      "properties": {
-        "Application_Type": "web",
-        "Flow_Type": "Redfield",
-        "Request_Source": "IbizaWebAppExtensionCreate",
-        "RetentionInDays": 90,
-        "WorkspaceResourceId": "[parameters('workspaces_defaultworkspace')]",
-        "IngestionMode": "LogAnalytics",
-        "publicNetworkAccessForIngestion": "Enabled",
-        "publicNetworkAccessForQuery": "Enabled"
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2021-06-01",
-      "name": "[parameters('storageAccounts_stcrmgeolocation_name')]",
-      "location": "westeurope",
-      "tags": {
-        "environment": "dev"
-      },
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "kind": "Storage",
-      "properties": {
-        "minimumTlsVersion": "TLS1_2",
-        "allowBlobPublicAccess": true,
-        "networkAcls": {
-          "bypass": "AzureServices",
-          "virtualNetworkRules": [],
-          "ipRules": [],
-          "defaultAction": "Allow"
-        },
-        "supportsHttpsTrafficOnly": true,
-        "encryption": {
-          "services": {
-            "file": {
-              "keyType": "Account",
-              "enabled": true
-            },
-            "blob": {
-              "keyType": "Account",
-              "enabled": true
-            }
-          },
-          "keySource": "Microsoft.Storage"
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Web/serverfarms",
-      "apiVersion": "2021-02-01",
-      "name": "[parameters('serverfarms_asp_rgcrmgeolocation_name')]",
-      "location": "West Europe",
-      "tags": {
-        "environment": "dev"
-      },
-      "sku": {
-        "name": "D1",
-        "tier": "Shared",
-        "size": "D1",
-        "family": "D",
-        "capacity": 0
-      },
-      "kind": "app",
-      "properties": {
-        "perSiteScaling": false,
-        "elasticScaleEnabled": false,
-        "maximumElasticWorkerCount": 1,
-        "isSpot": false,
-        "reserved": false,
-        "isXenon": false,
-        "hyperV": false,
-        "targetWorkerCount": 0,
-        "targetWorkerSizeId": 0,
-        "zoneRedundant": false
-      }
-    },
-    {
-      "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions",
-      "apiVersion": "2021-10-15",
-      "name": "[concat(parameters('databaseAccounts_cosmos_crm_geolocation_name'), '/00000000-0000-0000-0000-000000000001')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_cosmos_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "roleName": "Cosmos DB Built-in Data Reader",
-        "type": "BuiltInRole",
-        "assignableScopes": [
-          "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_cosmos_crm_geolocation_name'))]"
-        ],
-        "permissions": [
-          {
-            "dataActions": [
-              "Microsoft.DocumentDB/databaseAccounts/readMetadata",
-              "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/executeQuery",
-              "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/readChangeFeed",
-              "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/read"
-            ],
-            "notDataActions": []
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions",
-      "apiVersion": "2021-10-15",
-      "name": "[concat(parameters('databaseAccounts_cosmos_crm_geolocation_name'), '/00000000-0000-0000-0000-000000000002')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_cosmos_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "roleName": "Cosmos DB Built-in Data Contributor",
-        "type": "BuiltInRole",
-        "assignableScopes": [
-          "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_cosmos_crm_geolocation_name'))]"
-        ],
-        "permissions": [
-          {
-            "dataActions": [
-              "Microsoft.DocumentDB/databaseAccounts/readMetadata",
-              "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/*",
-              "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/*"
-            ],
-            "notDataActions": []
-          }
-        ]
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/degradationindependencyduration')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "degradationindependencyduration",
-          "DisplayName": "Degradation in dependency duration",
-          "Description": "Smart Detection rules notify you of performance anomaly issues.",
-          "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": false,
-          "SupportsEmailNotifications": true
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/degradationinserverresponsetime')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "degradationinserverresponsetime",
-          "DisplayName": "Degradation in server response time",
-          "Description": "Smart Detection rules notify you of performance anomaly issues.",
-          "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": false,
-          "SupportsEmailNotifications": true
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/digestMailConfiguration')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "digestMailConfiguration",
-          "DisplayName": "Digest Mail Configuration",
-          "Description": "This rule describes the digest mail preferences",
-          "HelpUrl": "www.homail.com",
-          "IsHidden": true,
-          "IsEnabledByDefault": true,
-          "IsInPreview": false,
-          "SupportsEmailNotifications": true
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/extension_billingdatavolumedailyspikeextension')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "extension_billingdatavolumedailyspikeextension",
-          "DisplayName": "Abnormal rise in daily data volume (preview)",
-          "Description": "This detection rule automatically analyzes the billing data generated by your application, and can warn you about an unusual increase in your application's billing costs",
-          "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/tree/master/SmartDetection/billing-data-volume-daily-spike.md",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/extension_canaryextension')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "extension_canaryextension",
-          "DisplayName": "Canary extension",
-          "Description": "Canary extension",
-          "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/",
-          "IsHidden": true,
-          "IsEnabledByDefault": true,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/extension_exceptionchangeextension')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "extension_exceptionchangeextension",
-          "DisplayName": "Abnormal rise in exception volume (preview)",
-          "Description": "This detection rule automatically analyzes the exceptions thrown in your application, and can warn you about unusual patterns in your exception telemetry.",
-          "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/abnormal-rise-in-exception-volume.md",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/extension_memoryleakextension')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "extension_memoryleakextension",
-          "DisplayName": "Potential memory leak detected (preview)",
-          "Description": "This detection rule automatically analyzes the memory consumption of each process in your application, and can warn you about potential memory leaks or increased memory consumption.",
-          "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/tree/master/SmartDetection/memory-leak.md",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/extension_securityextensionspackage')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "extension_securityextensionspackage",
-          "DisplayName": "Potential security issue detected (preview)",
-          "Description": "This detection rule automatically analyzes the telemetry generated by your application and detects potential security issues.",
-          "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/application-security-detection-pack.md",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/extension_traceseveritydetector')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "extension_traceseveritydetector",
-          "DisplayName": "Degradation in trace severity ratio (preview)",
-          "Description": "This detection rule automatically analyzes the trace logs emitted from your application, and can warn you about unusual patterns in the severity of your trace telemetry.",
-          "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/degradation-in-trace-severity-ratio.md",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/longdependencyduration')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "longdependencyduration",
-          "DisplayName": "Long dependency duration",
-          "Description": "Smart Detection rules notify you of performance anomaly issues.",
-          "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": false,
-          "SupportsEmailNotifications": true
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/migrationToAlertRulesCompleted')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "migrationToAlertRulesCompleted",
-          "DisplayName": "Migration To Alert Rules Completed",
-          "Description": "A configuration that controls the migration state of Smart Detection to Smart Alerts",
-          "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
-          "IsHidden": true,
-          "IsEnabledByDefault": false,
-          "IsInPreview": true,
-          "SupportsEmailNotifications": false
-        },
-        "enabled": false,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/slowpageloadtime')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "slowpageloadtime",
-          "DisplayName": "Slow page load time",
-          "Description": "Smart Detection rules notify you of performance anomaly issues.",
-          "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": false,
-          "SupportsEmailNotifications": true
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "microsoft.insights/components/ProactiveDetectionConfigs",
-      "apiVersion": "2018-05-01-preview",
-      "name": "[concat(parameters('components_func_crm_geolocation_name'), '/slowserverresponsetime')]",
-      "location": "westeurope",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-      ],
-      "properties": {
-        "ruleDefinitions": {
-          "Name": "slowserverresponsetime",
-          "DisplayName": "Slow server response time",
-          "Description": "Smart Detection rules notify you of performance anomaly issues.",
-          "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
-          "IsHidden": false,
-          "IsEnabledByDefault": true,
-          "IsInPreview": false,
-          "SupportsEmailNotifications": true
-        },
-        "enabled": true,
-        "sendEmailsToSubscriptionOwners": true,
-        "customEmails": []
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/blobServices",
-      "apiVersion": "2021-06-01",
-      "name": "[concat(parameters('storageAccounts_stcrmgeolocation_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_stcrmgeolocation_name'))]"
-      ],
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "properties": {
-        "cors": {
-          "corsRules": []
-        },
-        "deleteRetentionPolicy": {
-          "enabled": false
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/fileServices",
-      "apiVersion": "2021-06-01",
-      "name": "[concat(parameters('storageAccounts_stcrmgeolocation_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_stcrmgeolocation_name'))]"
-      ],
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "properties": {
-        "protocolSettings": {
-          "smb": {}
-        },
-        "cors": {
-          "corsRules": []
-        },
-        "shareDeleteRetentionPolicy": {
-          "enabled": true,
-          "days": 7
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/queueServices",
-      "apiVersion": "2021-06-01",
-      "name": "[concat(parameters('storageAccounts_stcrmgeolocation_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_stcrmgeolocation_name'))]"
-      ],
-      "properties": {
-        "cors": {
-          "corsRules": []
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/tableServices",
-      "apiVersion": "2021-06-01",
-      "name": "[concat(parameters('storageAccounts_stcrmgeolocation_name'), '/default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_stcrmgeolocation_name'))]"
-      ],
-      "properties": {
-        "cors": {
-          "corsRules": []
-        }
-      }
-    },
-    {
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('name')]",
       "type": "Microsoft.Web/sites",
-      "apiVersion": "2021-02-01",
-      "name": "[parameters('sites_func_crm_geolocation_name')]",
-      "location": "West Europe",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_asp_rgcrmgeolocation_name'))]"
-      ],
-      "tags": {
-        "environment": "dev"
-      },
       "kind": "functionapp",
+      "location": "[parameters('location')]",
+      "tags": {},
+      "dependsOn": [
+        "microsoft.insights/components/func-crm-geolocation-dev",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
+      ],
       "properties": {
-        "enabled": true,
-        "hostNameSslStates": [
-          {
-            "name": "[concat(parameters('sites_func_crm_geolocation_name'), '.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Standard"
-          },
-          {
-            "name": "[concat(parameters('sites_func_crm_geolocation_name'), '.scm.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Repository"
-          }
-        ],
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_asp_rgcrmgeolocation_name'))]",
-        "reserved": false,
-        "isXenon": false,
-        "hyperV": false,
+        "name": "[parameters('name')]",
         "siteConfig": {
-          "numberOfWorkers": 1,
-          "acrUseManagedIdentityCreds": false,
-          "alwaysOn": false,
-          "http20Enabled": false,
-          "functionAppScaleLimit": 0,
-          "minimumElasticInstanceCount": 0
-        },
-        "scmSiteAlsoStopped": false,
-        "clientAffinityEnabled": false,
-        "clientCertEnabled": false,
-        "clientCertMode": "Required",
-        "hostNamesDisabled": false,
-        "customDomainVerificationId": "B827A95C01D63207F3B6419B0319D4AF190F6F3A343D3E006B179317F92C6167",
-        "containerSize": 1536,
-        "dailyMemoryTimeQuota": 0,
-        "httpsOnly": false,
-        "redundancyMode": "None",
-        "storageAccountRequired": false,
-        "keyVaultReferenceIdentity": "SystemAssigned"
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
-      "apiVersion": "2021-02-01",
-      "name": "[concat(parameters('sites_func_crm_geolocation_name'), '/ftp')]",
-      "location": "West Europe",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('sites_func_crm_geolocation_name'))]"
-      ],
-      "tags": {
-        "environment": "dev"
-      },
-      "properties": {
-        "allow": true
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
-      "apiVersion": "2021-02-01",
-      "name": "[concat(parameters('sites_func_crm_geolocation_name'), '/scm')]",
-      "location": "West Europe",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('sites_func_crm_geolocation_name'))]"
-      ],
-      "tags": {
-        "environment": "dev"
-      },
-      "properties": {
-        "allow": true
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites/config",
-      "apiVersion": "2021-02-01",
-      "name": "[concat(parameters('sites_func_crm_geolocation_name'), '/web')]",
-      "location": "West Europe",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('sites_func_crm_geolocation_name'))]"
-      ],
-      "tags": {
-        "environment": "dev"
-      },
-      "properties": {
-        "numberOfWorkers": 1,
-        "defaultDocuments": [
-          "Default.htm",
-          "Default.html",
-          "Default.asp",
-          "index.htm",
-          "index.html",
-          "iisstart.htm",
-          "default.aspx",
-          "index.php"
-        ],
-        "netFrameworkVersion": "v6.0",
-        "phpVersion": "5.6",
-        "requestTracingEnabled": false,
-        "remoteDebuggingEnabled": false,
-        "httpLoggingEnabled": false,
-        "acrUseManagedIdentityCreds": false,
-        "logsDirectorySizeLimit": 35,
-        "detailedErrorLoggingEnabled": false,
-        "publishingUsername": "$func-crm-geolocation",
-        "scmType": "None",
-        "use32BitWorkerProcess": true,
-        "webSocketsEnabled": false,
-        "alwaysOn": false,
-        "managedPipelineMode": "Integrated",
-        "virtualApplications": [
-          {
-            "virtualPath": "/",
-            "physicalPath": "site\\wwwroot",
-            "preloadEnabled": false
-          }
-        ],
-        "loadBalancing": "LeastRequests",
-        "experiments": {
-          "rampUpRules": []
-        },
-        "autoHealEnabled": false,
-        "vnetRouteAllEnabled": false,
-        "vnetPrivatePortsCount": 0,
-        "cors": {
-          "allowedOrigins": [
-            "https://portal.azure.com"
+          "appSettings": [
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~4"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "dotnet"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference('microsoft.insights/components/func-crm-geolocation-dev', '2015-05-01').InstrumentationKey]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference('microsoft.insights/components/func-crm-geolocation-dev', '2015-05-01').ConnectionString]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+            }
           ],
-          "supportCredentials": false
+          "cors": {
+            "allowedOrigins": [
+              "https://portal.azure.com"
+            ]
+          },
+          "use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+          "alwaysOn": "[parameters('alwaysOn')]",
+          "netFrameworkVersion": "[parameters('netFrameworkVersion')]"
         },
-        "localMySqlEnabled": false,
-        "ipSecurityRestrictions": [
-          {
-            "ipAddress": "Any",
-            "action": "Allow",
-            "priority": 1,
-            "name": "Allow all",
-            "description": "Allow all access"
-          }
-        ],
-        "scmIpSecurityRestrictions": [
-          {
-            "ipAddress": "Any",
-            "action": "Allow",
-            "priority": 1,
-            "name": "Allow all",
-            "description": "Allow all access"
-          }
-        ],
-        "scmIpSecurityRestrictionsUseMain": false,
-        "http20Enabled": false,
-        "minTlsVersion": "1.2",
-        "scmMinTlsVersion": "1.0",
-        "ftpsState": "AllAllowed",
-        "preWarmedInstanceCount": 0,
-        "functionAppScaleLimit": 0,
-        "functionsRuntimeScaleMonitoringEnabled": false,
-        "minimumElasticInstanceCount": 0,
-        "azureStorageAccounts": {}
+        "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+        "clientAffinityEnabled": false
       }
     },
     {
-      "type": "Microsoft.Web/sites/hostNameBindings",
-      "apiVersion": "2021-02-01",
-      "name": "[concat(parameters('sites_func_crm_geolocation_name'), '/', parameters('sites_func_crm_geolocation_name'), '.azurewebsites.net')]",
-      "location": "West Europe",
+      "apiVersion": "2020-02-02-preview",
+      "name": "func-crm-geolocation-dev",
+      "type": "microsoft.insights/components",
+      "location": "westeurope",
+      "tags": {},
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('sites_func_crm_geolocation_name'))]"
+        "newWorkspaceTemplate"
       ],
       "properties": {
-        "siteName": "func-crm-geolocation",
-        "hostNameType": "Verified"
+        "ApplicationId": "[parameters('name')]",
+        "Request_Source": "IbizaWebAppExtensionCreate",
+        "Flow_Type": "Redfield",
+        "Application_Type": "web",
+        "WorkspaceResourceId": "/subscriptions/d64b37dd-6c05-41e4-beaf-72f995fc1f29/resourceGroups/DefaultResourceGroup-WEU/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-d64b37dd-6c05-41e4-beaf-72f995fc1f29-WEU"
       }
     },
     {
-      "type": "microsoft.alertsmanagement/smartdetectoralertrules",
-      "apiVersion": "2021-04-01",
-      "name": "[parameters('smartdetectoralertrules_failure_anomalies___func_crm_geolocation_name')]",
-      "location": "global",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]",
-        "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_Application_Insights_Smart_Detection_name'))]"
-      ],
+      "apiVersion": "2019-06-01",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "tags": {},
+      "sku": {
+        "name": "Standard_LRS"
+      },
       "properties": {
-        "description": "Failure Anomalies notifies you of an unusual rise in the rate of failed HTTP requests or dependency calls.",
-        "state": "Enabled",
-        "severity": "Sev3",
-        "frequency": "PT1M",
-        "detector": {
-          "id": "FailureAnomaliesDetector"
-        },
-        "scope": [
-          "[resourceId('microsoft.insights/components', parameters('components_func_crm_geolocation_name'))]"
-        ],
-        "actionGroups": {
-          "groupIds": [
-            "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_Application_Insights_Smart_Detection_name'))]"
+        "supportsHttpsTrafficOnly": true,
+        "minimumTlsVersion": "TLS1_2"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "newWorkspaceTemplate",
+      "resourceGroup": "DefaultResourceGroup-WEU",
+      "subscriptionId": "[parameters('subscriptionId')]",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "apiVersion": "2020-08-01",
+              "name": "DefaultWorkspace-d64b37dd-6c05-41e4-beaf-72f995fc1f29-WEU",
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "location": "West Europe",
+              "properties": {}
+            }
           ]
         }
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-      "apiVersion": "2021-06-01",
-      "name": "[concat(parameters('storageAccounts_stcrmgeolocation_name'), '/default/azure-webjobs-hosts')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_stcrmgeolocation_name'), 'default')]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_stcrmgeolocation_name'))]"
-      ],
-      "properties": {
-        "immutableStorageWithVersioning": {
-          "enabled": false
-        },
-        "defaultEncryptionScope": "$account-encryption-key",
-        "denyEncryptionScopeOverride": false,
-        "publicAccess": "None"
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-      "apiVersion": "2021-06-01",
-      "name": "[concat(parameters('storageAccounts_stcrmgeolocation_name'), '/default/azure-webjobs-secrets')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_stcrmgeolocation_name'), 'default')]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_stcrmgeolocation_name'))]"
-      ],
-      "properties": {
-        "immutableStorageWithVersioning": {
-          "enabled": false
-        },
-        "defaultEncryptionScope": "$account-encryption-key",
-        "denyEncryptionScopeOverride": false,
-        "publicAccess": "None"
       }
     }
   ]

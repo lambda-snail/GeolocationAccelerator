@@ -1,5 +1,33 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {}
+  "parameters": {
+    "subscriptionId": {
+      "value": "Read from devops pipeline"
+    },
+    "name": {
+      "value": "Read from devops pipeline"
+    },
+    "location": {
+      "value": "Read from devops pipeline"
+    },
+    "hostingPlanName": {
+      "value": "Read from devops pipeline"
+    },
+    "serverFarmResourceGroup": {
+      "value": "Read from devops pipeline"
+    },
+    "alwaysOn": {
+      "value": false
+    },
+    "storageAccountName": {
+      "value": "Read from devops pipeline"
+    },
+    "use32BitWorkerProcess": {
+      "value": true
+    },
+    "netFrameworkVersion": {
+      "value": "v6.0"
+    }
+  }
 }
