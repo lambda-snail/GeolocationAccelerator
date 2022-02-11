@@ -18,3 +18,9 @@ steps:
     projects: "**/*.csproj"
     arguments: '--configuration ${buildConfiguration} --output ${Build.ArtifactStagingDirectory}'
     zipAfterPublish: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
