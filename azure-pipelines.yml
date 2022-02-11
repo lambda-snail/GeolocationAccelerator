@@ -14,11 +14,11 @@ steps:
     command: 'build'
     publishWebProjects: false
     projects: "**/*.csproj"
-    arguments: '--configuration ${buildConfiguration} --output ${Build.BinariesDirectory}/publish_output'
+    arguments: '--configuration ${buildConfiguration} --output ${Build.BinariesDirectory}'
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)/publish_output'
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
