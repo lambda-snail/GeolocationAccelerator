@@ -8,8 +8,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
-    arguments: '-target:Azure.Functions --output $(Build.BinariesDirectory)/publish_output'
+    projects: '**/Azure.Functions.csproj'
+    arguments: '--output $(Build.BinariesDirectory)/publish_output'
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.BinariesDirectory)/publish_output'
