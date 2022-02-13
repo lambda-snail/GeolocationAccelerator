@@ -57,8 +57,8 @@ namespace Accelerator.GeoLocation.Webhooks
             try
             {
                 string dynamicsId = id.Value as string;
-                double longitudeDouble = (double)longitude.Value; // double.Parse(longitude.Value as string, CultureInfo.InvariantCulture);
-                double latitudeDouble = (double)latitude.Value;//double.Parse(latitude.Value as string, CultureInfo.InvariantCulture);
+                double longitudeDouble = double.Parse(longitude.Value.ToString()); // double.Parse(longitude.Value as string, CultureInfo.InvariantCulture);
+                double latitudeDouble = double.Parse(latitude.Value.ToString());//double.Parse(latitude.Value as string, CultureInfo.InvariantCulture);
 
                 _logger.LogInformation($"Received synchronization request: lon: {longitudeDouble}, lat: {latitudeDouble}, id: {dynamicsId}");
 
@@ -78,6 +78,7 @@ namespace Accelerator.GeoLocation.Webhooks
             catch(Exception e)
             {
                 _logger.LogError(e.Message);
+                _logger.LogError("Request: " + requestBody);
             }
 
             return new OkObjectResult(string.Empty);
