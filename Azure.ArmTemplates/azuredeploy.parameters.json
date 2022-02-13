@@ -37,6 +37,12 @@
     },
     "netFrameworkVersion": {
       "value": "v6.0"
+    },
+    "WorkspaceResourceIdParameter": {
+      "value": "Read_from_devops_pipeline"
+    },
+    "WorkspaceNameParameter": {
+      "value": "Read_from_devops_pipeline"
     }
   }
 }
