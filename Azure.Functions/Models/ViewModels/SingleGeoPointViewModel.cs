@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Accelerator.GeoLocation.Models.ViewModels;
 public class SingleGeoPointViewModel
 {

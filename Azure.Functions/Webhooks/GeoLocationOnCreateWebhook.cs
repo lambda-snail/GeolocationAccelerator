@@ -60,6 +60,8 @@ namespace Accelerator.GeoLocation.Webhooks
                 double longitudeDouble = (double)longitude.Value; // double.Parse(longitude.Value as string, CultureInfo.InvariantCulture);
                 double latitudeDouble = (double)latitude.Value;//double.Parse(latitude.Value as string, CultureInfo.InvariantCulture);
 
+                _logger.LogInformation($"Received synchronization request: lon: {longitudeDouble}, lat: {latitudeDouble}, id: {dynamicsId}");
+
                 GeoPointModel point = new GeoPointModel(
                     dynamicsId,
                     longitudeDouble,
