@@ -57,8 +57,8 @@ namespace Accelerator.GeoLocation.Webhooks
             try
             {
                 string dynamicsId = id.Value as string;
-                double longitudeDouble = double.Parse(longitude.Value as string, CultureInfo.InvariantCulture);
-                double latitudeDouble = double.Parse(latitude.Value as string, CultureInfo.InvariantCulture);
+                double longitudeDouble = (double)longitude.Value; // double.Parse(longitude.Value as string, CultureInfo.InvariantCulture);
+                double latitudeDouble = (double)latitude.Value;//double.Parse(latitude.Value as string, CultureInfo.InvariantCulture);
 
                 GeoPointModel point = new GeoPointModel(
                     dynamicsId,
