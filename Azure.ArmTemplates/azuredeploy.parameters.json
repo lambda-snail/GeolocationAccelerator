@@ -17,6 +17,15 @@
     "serverFarmResourceGroup": {
       "value": "Read_from_devops_pipeline"
     },
+    "CosmosDbConnectionStringParameter": {
+      "value": "Read_from_devops_pipeline"
+    },
+    "CosmosDbCollectionNameParameter": {
+      "value": "Read_from_devops_pipeline"
+    },
+    "CosmosDbNameParameter": {
+      "value": "Read_from_devops_pipeline"
+    },
     "alwaysOn": {
       "value": false
     },

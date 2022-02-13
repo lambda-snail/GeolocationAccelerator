@@ -17,6 +17,15 @@
     "serverFarmResourceGroup": {
       "type": "string"
     },
+    "CosmosDbConnectionStringParameter": {
+      "type": "string"
+    },
+    "CosmosDbCollectionNameParameter": {
+      "type": "string"
+    },
+    "CosmosDbNameParameter": {
+      "type": "string"
+    },
     "alwaysOn": {
       "type": "bool"
     },
@@ -66,6 +75,18 @@
             {
               "name": "AzureWebJobsStorage",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+            },
+            {
+              "name": "CosmosDbConnectionString",
+              "value": "[parameters('CosmosDbConnectionStringParameter')]"
+            },
+            {
+              "name": "CosmosDbCollectionName",
+              "value": "[parameters('CosmosDbCollectionNameParameter')]"
+            },
+            {
+              "name": "CosmosDbName",
+              "value": "[parameters('CosmosDbNameParameter')]"
             }
           ],
           "cors": {
