@@ -31,7 +31,7 @@ public class CreateGeoLocation
     }
 
     [FunctionName("CreateGeoLocation")]
-    [OpenApiOperation(operationId: "Run", tags: new[] { "location" })]
+    [OpenApiOperation(operationId: "Run", tags: new[] { "location" }, Description = "Creates a new location in the database.")]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiRequestBody(contentType:"", bodyType: typeof(SingleGeoPointViewModel), Description = "The CRM data to insert into the database.")]
     //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(GeoPointModel), Description = "The Geo Location to send to the Db")]

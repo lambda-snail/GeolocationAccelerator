@@ -30,7 +30,7 @@ namespace Accelerator.GeoLocation
         }
 
         [FunctionName("GetGeoLocation")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "location" })]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "location" }, Description = "Retreive a location from the database.")]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiParameter(name: "id", In = ParameterLocation.Path, Required = true, Type = typeof(string), Description = "The dynamics id (Guid) of the location")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/json", bodyType: typeof(SingleGeoPointViewModel), Description = "The location definition")]
