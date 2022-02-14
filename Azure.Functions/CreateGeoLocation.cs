@@ -38,7 +38,7 @@ public class CreateGeoLocation
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/json", bodyType: typeof(SingleGeoPointViewModel), Description = "The created location")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.InternalServerError, contentType: "text/plain", bodyType: typeof(string), Description = "If something went wrong")]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "geolocations")] HttpRequest req
+        [HttpTrigger(AuthorizationLevel.Function, "put", Route = "geolocations")] HttpRequest req
         )
     {
         try
@@ -46,18 +46,13 @@ public class CreateGeoLocation
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             SingleGeoPointViewModel requestData = JsonConvert.DeserializeObject<SingleGeoPointViewModel>(requestBody);
 
-            //var content = response.Content;
-            //var jsonResult = JsonConvert.DeserializeObject(content).ToString();
-            //var result = JsonConvert.DeserializeObject<Model>(jsonResult);
-
-
             GeoPointModel point = new GeoPointModel(
-                    requestData.DynamicsId,
+                    requestData.Id,
                     requestData.Longitude,
                     requestData.Latitude
                 );
 
-            ICosmosDbLocationService.LocationQueryResponse response = await _cosmosService.CreatePoint(point);
+            ICosmosDbLocationService.LocationQueryResponse response = await _cosmosService.UpsertPoint(point);
 
             if (response.Success)
             {
