@@ -41,28 +41,22 @@ namespace Accelerator.GeoLocation
         {
             try
             {
-                ICosmosDbLocationService.MultipleLocationQueryResponse response = await _cosmosService.GetPoints(id);
+                ICosmosDbLocationService.LocationQueryResponse response = await _cosmosService.GetPoint(id);
                 if (response.Success)
                 {
-                    // TODO: Use a mapper here -- to messy
-                    List<CoordinatePair> locations = new(response.Locations.Count);
-                    for (int i = 0; i < response.Locations.Count; ++i)
-                    {
-                        GeoPointModel pointModel = response.Locations[i];
-                        locations.Add(new CoordinatePair
-                        {
-                            Latitude = pointModel.LocationDefinition.Position.Latitude,
-                            Longitude = pointModel.LocationDefinition.Position.Longitude,
-                        });
-                    }
-
-                    MultipleGeoPointsViewModel points = new MultipleGeoPointsViewModel { DynamicsId = id, Coordinates = locations };
+                    SingleGeoPointViewModel points = new SingleGeoPointViewModel { 
+                                                            Id = id,
+                                                            Longitude = response.Location.LocationDefinition.Position.Longitude,
+                                                            Latitude = response.Location.LocationDefinition.Position.Latitude
+                                                      };
 
                     return new OkObjectResult(points);
                 }
             }
             catch(Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return new ObjectResult(HttpStatusCode.InternalServerError);
             }
 

@@ -19,9 +19,9 @@ public class CosmosDbLocationService : ICosmosDbLocationService
                             Environment.GetEnvironmentVariable("CosmosDbCollectionName"));
     }
 
-    public async Task<ICosmosDbLocationService.LocationQueryResponse> CreatePoint(GeoPointModel point)
+    public async Task<ICosmosDbLocationService.LocationQueryResponse> UpsertPoint(GeoPointModel point)
     {
-        ItemResponse<GeoPointModel> response = await _pointContainer.CreateItemAsync(point);
+        ItemResponse<GeoPointModel> response = await _pointContainer.UpsertItemAsync(point);
         
         if((int)response.StatusCode == 200 || (int)response.StatusCode == 201)
         {
@@ -31,28 +31,15 @@ public class CosmosDbLocationService : ICosmosDbLocationService
         return new ICosmosDbLocationService.LocationQueryResponse(null, false);
     }
 
-    public async Task<ICosmosDbLocationService.MultipleLocationQueryResponse> GetPoints(string dynamicsId)
+    public async Task<ICosmosDbLocationService.LocationQueryResponse> GetPoint(string id)
     {
-        FeedIterator<GeoPointModel> pointIterator =
-            _pointContainer.GetItemLinqQueryable<GeoPointModel>(false)
-                           .Where(p => p.DynamicsId == dynamicsId)
-                           .ToFeedIterator();
+        GeoPointModel point = await _pointContainer.ReadItemAsync<GeoPointModel>(id, new PartitionKey(id));
 
-        List<GeoPointModel> locations = new();
-        while(pointIterator.HasMoreResults)
+        if (point != default(GeoPointModel))
         {
-            FeedResponse<GeoPointModel> response = await pointIterator.ReadNextAsync();
-            foreach (GeoPointModel point in response)
-            {
-               locations.Add(point);
-            }
-        }
-        
-        if (locations.Count > 0)
-        {
-            return new ICosmosDbLocationService.MultipleLocationQueryResponse(locations, true);
+            return new ICosmosDbLocationService.LocationQueryResponse(point, true);
         }
 
-        return new ICosmosDbLocationService.MultipleLocationQueryResponse(null, false);
+        return new ICosmosDbLocationService.LocationQueryResponse(null, false);
     }
 }

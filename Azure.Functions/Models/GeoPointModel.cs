@@ -16,20 +16,13 @@ public class GeoPointModel
     public string Id { get; set; }
 
     /// <summary>
-    /// The Id of the corresponding row in the CRM.
-    /// </summary>
-    public string DynamicsId { get; set; }
-
-    /// <summary>
     /// The location of the region.
     /// </summary>
     public Point LocationDefinition { get; set; }
 
     public GeoPointModel(string dynamicsId, double longitude, double latitude)
     {
-        DynamicsId = dynamicsId;
-        
-        Id = Guid.NewGuid().ToString();
+        Id = dynamicsId;
 
         if(! LongitudeIsValid(longitude))
         {

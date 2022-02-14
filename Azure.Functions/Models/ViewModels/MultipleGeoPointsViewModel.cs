@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Accelerator.GeoLocation.Models.ViewModels;
 public class MultipleGeoPointsViewModel
 {
-    public string DynamicsId { get; set; }
+    public string Id { get; set; }
     public List<CoordinatePair> Coordinates { get; set; }
 }
 

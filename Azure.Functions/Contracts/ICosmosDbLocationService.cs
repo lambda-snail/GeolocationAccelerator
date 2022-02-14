@@ -6,8 +6,8 @@ namespace Accelerator.GeoLocation.Contracts;
 
 public interface ICosmosDbLocationService
 {
-    public Task<LocationQueryResponse> CreatePoint(GeoPointModel point);
-    public Task<MultipleLocationQueryResponse> GetPoints(string dynamicsId);
+    public Task<LocationQueryResponse> UpsertPoint(GeoPointModel point);
+    public Task<LocationQueryResponse> GetPoint(string dynamicsId);
 
 
     public record LocationQueryResponse(GeoPointModel Location, bool Success);
