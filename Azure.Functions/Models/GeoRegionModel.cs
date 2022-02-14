@@ -1,5 +1,7 @@
 ﻿using Microsoft.Azure.Cosmos.Spatial;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Accelerator.GeoLocation.Models;
 
@@ -10,17 +12,30 @@ namespace Accelerator.GeoLocation.Models;
 public class GeoRegionModel
 {
     /// <summary>
-    /// The Id in the Cosmos Db.
+    /// The Id in the Cosmos Db and Dynamics.
     /// </summary>
-    public Guid RegionId { get; set; }
-
-    /// <summary>
-    /// The Id of the corresponding row in the CRM.
-    /// </summary>
-    public Guid DynamicsId { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// The geometry of the region.
     /// </summary>
     public Polygon AreaDefinition { get; set; }
+
+    public GeoRegionModel(string id, List<CoordinatePair> coordinates)
+    {
+        if(string.IsNullOrWhiteSpace(id))
+        {
+            throw new ArgumentNullException("Error: Parameter cannot be null or empty: " + nameof(id));
+        }
+
+        if(coordinates.Count == 0)
+        {
+            throw new ArgumentException("Error: No coordinates specified.");
+        }
+        
+        // TODO: Benchmark this!
+        IList<Position> positions = coordinates.Select<CoordinatePair, Position>(c => new Position(c.Longitude, c.Latitude)).ToList();
+
+        AreaDefinition = new Polygon(positions);
+    }
 }

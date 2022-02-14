@@ -33,10 +33,10 @@ public class CreateGeoLocation
     [FunctionName("CreateGeoLocation")]
     [OpenApiOperation(operationId: "Run", tags: new[] { "location" }, Description = "Creates a new location in the database.")]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-    [OpenApiRequestBody(contentType:"", bodyType: typeof(SingleGeoPointViewModel), Description = "The CRM data to insert into the database.")]
+    [OpenApiRequestBody(contentType: "text/json", bodyType: typeof(SingleGeoPointViewModel), Description = "The CRM data to insert into the database.")]
     //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(GeoPointModel), Description = "The Geo Location to send to the Db")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/json", bodyType: typeof(SingleGeoPointViewModel), Description = "The created location")]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.InternalServerError, contentType: "text/plain", bodyType: typeof(string), Description = "If something went wrong")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.InternalServerError, contentType: "text/json", bodyType: typeof(string), Description = "If something went wrong")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "put", Route = "geolocations")] HttpRequest req
         )
