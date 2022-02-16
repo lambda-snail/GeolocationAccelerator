@@ -13,6 +13,7 @@ public class CosmosDbLocationService : ICosmosDbLocationService
 {
     private Container _pointContainer;
 
+    // TODO: Inject logger as well
     public CosmosDbLocationService(CosmosClient client)
     {
         _pointContainer = client.GetContainer(Environment.GetEnvironmentVariable("CosmosDbName"),
