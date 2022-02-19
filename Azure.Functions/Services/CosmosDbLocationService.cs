@@ -34,11 +34,11 @@ public class CosmosDbLocationService : ICosmosDbLocationService
 
     public async Task<ICosmosDbLocationService.LocationQueryResponse> GetPoint(string id)
     {
-        GeoPointModel point = await _pointContainer.ReadItemAsync<GeoPointModel>(id, new PartitionKey(id));
+        ItemResponse<GeoPointModel> response = await _pointContainer.ReadItemAsync<GeoPointModel>(id, new PartitionKey(id));
 
-        if (point != default(GeoPointModel))
+        if ((int)response.StatusCode == 200 || (int)response.StatusCode == 201)
         {
-            return new ICosmosDbLocationService.LocationQueryResponse(point, true);
+            return new ICosmosDbLocationService.LocationQueryResponse(response.Resource, true);
         }
 
         return new ICosmosDbLocationService.LocationQueryResponse(null, false);
