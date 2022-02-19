@@ -1,4 +1,6 @@
 
+[![Build Status](https://dev.azure.com/blombergniclas/GeoLocation.Accelerator/_apis/build/status/lambda-snail.GeolocationAccelerator?branchName=main)](https://dev.azure.com/blombergniclas/GeoLocation.Accelerator/_build/latest?definitionId=3&branchName=main)
+
 # GeoLocation Accelerator
 
 This is a simple project to enable location-based queries in Dynamics 365 and powerapps.
