@@ -22,7 +22,7 @@ public class CosmosDbLocationService : ICosmosDbLocationService
 
     public async Task<ICosmosDbLocationService.LocationQueryResponse> UpsertPoint(GeoPointModel point)
     {
-        ItemResponse<GeoPointModel> response = await _pointContainer.UpsertItemAsync(point);
+        ItemResponse<GeoPointModel> response = await _pointContainer.UpsertItemAsync(point, new PartitionKey(point.Id));
         
         if((int)response.StatusCode == 200 || (int)response.StatusCode == 201)
         {
