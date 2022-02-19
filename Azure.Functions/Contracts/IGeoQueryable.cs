@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Accelerator.GeoLocation.Models;
+namespace Accelerator.GeoLocation.Contracts;
 
 public interface IGeoQueryable<T> where T : IModel
 {
