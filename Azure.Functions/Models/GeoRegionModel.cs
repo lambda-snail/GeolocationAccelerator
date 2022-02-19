@@ -28,6 +28,8 @@ public class GeoRegionModel
             throw new ArgumentNullException("Error: Parameter cannot be null or empty: " + nameof(id));
         }
 
+        Id = id;
+
         if(coordinates.Count == 0)
         {
             throw new ArgumentException("Error: No coordinates specified.");
