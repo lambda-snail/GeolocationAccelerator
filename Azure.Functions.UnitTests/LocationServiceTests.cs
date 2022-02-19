@@ -3,11 +3,10 @@ using Moq;
 using Accelerator.GeoLocation.Contracts;
 using Microsoft.Azure.Cosmos;
 using Accelerator.GeoLocation.Models;
-using Microsoft.Azure.Cosmos.Spatial;
 using Accelerator.GeoLocation.Services;
 using System.Threading.Tasks;
-using System;
 using System.Net;
+using Azure.Functions.UnitTests.Shared;
 
 namespace Azure.Functions.UnitTests;
 
@@ -17,9 +16,9 @@ public class LocationServiceTests
     public async Task SuccessfulUpsert_ShouldReturnSuccessfulResult()
     {
         // Arrange
-        Mock<ItemResponse<GeoPointModel>> response = GetMockResponse(HttpStatusCode.OK, new GeoPointModel("1234", 0.1, 0.1));
-        Mock<Container> mockContainer = GetMockContainer_Upsert(response);
-        Mock<CosmosClient> mockCosmosClient = GetMockClient(mockContainer);
+        Mock<ItemResponse<GeoPointModel>> response = CosmosMoqUtils<GeoPointModel>.GetMockResponse(HttpStatusCode.OK, new GeoPointModel("1234", 0.1, 0.1));
+        Mock<Container> mockContainer = CosmosMoqUtils<GeoPointModel>.GetMockContainer_Upsert(response);
+        Mock<CosmosClient> mockCosmosClient = CosmosMoqUtils<GeoPointModel>.GetMockClient(mockContainer);
 
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
@@ -36,9 +35,9 @@ public class LocationServiceTests
     public async Task FailedUpsert_ShouldReturnUnsuccessfulResult()
     {
         // Arrange
-        Mock<ItemResponse<GeoPointModel>> response = GetMockResponse(HttpStatusCode.BadRequest, (GeoPointModel)null);
-        Mock<Container> mockContainer = GetMockContainer_Upsert(response);
-        Mock<CosmosClient> mockCosmosClient = GetMockClient(mockContainer);
+        Mock<ItemResponse<GeoPointModel>> response = CosmosMoqUtils<GeoPointModel>.GetMockResponse(HttpStatusCode.BadRequest, (GeoPointModel)null);
+        Mock<Container> mockContainer = CosmosMoqUtils<GeoPointModel>.GetMockContainer_Upsert(response);
+        Mock<CosmosClient> mockCosmosClient = CosmosMoqUtils<GeoPointModel>.GetMockClient(mockContainer);
 
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
@@ -57,11 +56,11 @@ public class LocationServiceTests
         string testId = "test";
 
         // Arrange
-        Mock<ItemResponse<GeoPointModel>> response = GetMockResponse(HttpStatusCode.OK, new GeoPointModel(testId, 0d, 0d));
+        Mock<ItemResponse<GeoPointModel>> response = CosmosMoqUtils<GeoPointModel>.GetMockResponse(HttpStatusCode.OK, new GeoPointModel(testId, 0d, 0d));
         
-        Mock<Container> mockContainer = GetMockContainer_Get(response);
+        Mock<Container> mockContainer = CosmosMoqUtils<GeoPointModel>.GetMockContainer_Get(response);
 
-        Mock<CosmosClient> mockCosmosClient = GetMockClient(mockContainer);
+        Mock<CosmosClient> mockCosmosClient = CosmosMoqUtils<GeoPointModel>.GetMockClient(mockContainer);
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
         // Act
@@ -73,16 +72,15 @@ public class LocationServiceTests
         mockContainer.Verify(container => container.ReadItemAsync<GeoPointModel>(testId, It.IsAny<PartitionKey>(), null, default), "When getting the location, the container should be queried with the provided id.");
     }
 
-
     [Fact]
     public async Task GetPointNonExistingId_ShouldReturnUnsuccesfullResult()
     {
         string testId = "test";
 
         // Arrange
-        Mock<ItemResponse<GeoPointModel>> response = GetMockResponse(HttpStatusCode.BadRequest, (GeoPointModel)null);
-        Mock<Container> mockContainer = GetMockContainer_Get(response);
-        Mock<CosmosClient> mockCosmosClient = GetMockClient(mockContainer);
+        Mock<ItemResponse<GeoPointModel>> response = CosmosMoqUtils<GeoPointModel>.GetMockResponse(HttpStatusCode.BadRequest, (GeoPointModel)null);
+        Mock<Container> mockContainer = CosmosMoqUtils<GeoPointModel>.GetMockContainer_Get(response);
+        Mock<CosmosClient> mockCosmosClient = CosmosMoqUtils<GeoPointModel>.GetMockClient(mockContainer);
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
         // Act
@@ -92,35 +90,5 @@ public class LocationServiceTests
         Assert.False(upsertResponse.Success);
         Assert.Null(upsertResponse.Location);
         mockContainer.Verify(container => container.ReadItemAsync<GeoPointModel>(testId, It.IsAny<PartitionKey>(), null, default), "When getting the location, the container should be queried with the provided id.");
-    }
-
-
-    private Mock<ItemResponse<GeoPointModel>> GetMockResponse(HttpStatusCode returnCode, GeoPointModel returnPoint)
-    {
-        Mock<ItemResponse<GeoPointModel>> response = new Mock<ItemResponse<GeoPointModel>>();
-        response.Setup(response => response.StatusCode).Returns(returnCode);
-        response.Setup(response => response.Resource).Returns(returnPoint);
-        return response;
-    }
-
-    Mock<Container> GetMockContainer_Upsert(Mock<ItemResponse<GeoPointModel>> mockResponse)
-    {
-        Mock<Container> mockContainer = new Mock<Container>();
-        mockContainer.Setup(container => container.UpsertItemAsync(It.IsAny<GeoPointModel>(), null, null, default).Result).Returns(mockResponse.Object);
-        return mockContainer;
-    }
-
-    Mock<Container> GetMockContainer_Get(Mock<ItemResponse<GeoPointModel>> mockResponse)
-    {
-        Mock<Container> mockContainer = new Mock<Container>();
-        mockContainer.Setup(container => container.ReadItemAsync<GeoPointModel>(It.IsAny<string>(), It.IsAny<PartitionKey>(), null, default).Result).Returns(mockResponse.Object);
-        return mockContainer;
-    }
-
-    Mock<CosmosClient> GetMockClient(Mock<Container> container)
-    {
-        Mock<CosmosClient> mockCosmosClient = new Mock<CosmosClient>();
-        mockCosmosClient.Setup(client => client.GetContainer(It.IsAny<string>(), It.IsAny<string>())).Returns(container.Object);
-        return mockCosmosClient;
     }
 }
