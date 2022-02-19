@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos.Spatial;
+﻿using Accelerator.GeoLocation.Contracts;
+using Microsoft.Azure.Cosmos.Spatial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Accelerator.GeoLocation.Models;
 /// Represents a region on the surface of the earth. Each GeoRegionModel corresponds to an entry in the CRM, and is synced one-way.
 /// Thus changes in the CRM will be reflected in the corresponding entry in the Cosmos Db.
 /// </summary>
-public class GeoRegionModel
+public class GeoRegionModel : IModel
 {
     /// <summary>
     /// The Id in the Cosmos Db and Dynamics.

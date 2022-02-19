@@ -9,38 +9,8 @@ using System.Threading.Tasks;
 
 namespace Accelerator.GeoLocation.Services;
 
-public class CosmosDbLocationService : ICosmosDbLocationService
+public class CosmosDbLocationService : CosmosDbServiceBase<GeoPointModel>, ICosmosDbLocationService
 {
-    private Container _pointContainer;
-
-    // TODO: Inject logger as well
-    public CosmosDbLocationService(CosmosClient client)
-    {
-        _pointContainer = client.GetContainer(Environment.GetEnvironmentVariable("CosmosDbName"),
-                            Environment.GetEnvironmentVariable("CosmosDbCollectionName"));
-    }
-
-    public async Task<ICosmosDbLocationService.LocationQueryResponse> UpsertPoint(GeoPointModel point)
-    {
-        ItemResponse<GeoPointModel> response = await _pointContainer.UpsertItemAsync(point, new PartitionKey(point.Id));
-        
-        if((int)response.StatusCode == 200 || (int)response.StatusCode == 201)
-        {
-            return new ICosmosDbLocationService.LocationQueryResponse(response.Resource, true);
-        }
-
-        return new ICosmosDbLocationService.LocationQueryResponse(null, false);
-    }
-
-    public async Task<ICosmosDbLocationService.LocationQueryResponse> GetPoint(string id)
-    {
-        ItemResponse<GeoPointModel> response = await _pointContainer.ReadItemAsync<GeoPointModel>(id, new PartitionKey(id));
-
-        if ((int)response.StatusCode == 200 || (int)response.StatusCode == 201)
-        {
-            return new ICosmosDbLocationService.LocationQueryResponse(response.Resource, true);
-        }
-
-        return new ICosmosDbLocationService.LocationQueryResponse(null, false);
-    }
+    public CosmosDbLocationService(CosmosClient client) : base(client)
+    { }
 }

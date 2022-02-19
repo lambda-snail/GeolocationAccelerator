@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace Accelerator.GeoLocation.Contracts;
 
-public interface ICosmosDbRegionService
+public interface ICosmosDbRegionService : IGeoQueryable<GeoRegionModel>
 {
-    Task<RegionQueryResponse> GetRegion(string id);
-    Task<RegionQueryResponse> UpsertRegion(GeoRegionModel region);
-
-    public record RegionQueryResponse(GeoRegionModel Region, bool Success);
+    //Task<GeoQueryResponse<GeoRegionModel>> GetRegion(string id);
+    //Task<GeoQueryResponse<GeoRegionModel>> UpsertRegion(GeoRegionModel region);
 }

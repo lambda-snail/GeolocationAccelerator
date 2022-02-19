@@ -23,12 +23,12 @@ public class LocationServiceTests
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbLocationService.LocationQueryResponse upsertResponse =
-            await locationService.UpsertPoint(new GeoPointModel("1234", 0.1, 0.1));
+        GeoQueryResponse<GeoPointModel> upsertResponse =
+            await locationService.UpsertItem(new GeoPointModel("1234", 0.1, 0.1));
 
         // Assert
         Assert.True(upsertResponse.Success);
-        Assert.NotNull(upsertResponse.Location);
+        Assert.NotNull(upsertResponse.Item);
     }
 
     [Fact]
@@ -42,12 +42,12 @@ public class LocationServiceTests
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbLocationService.LocationQueryResponse upsertResponse =
-            await locationService.UpsertPoint(new GeoPointModel("1234", 0.1, 0.1));
+        GeoQueryResponse<GeoPointModel> upsertResponse =
+            await locationService.UpsertItem(new GeoPointModel("1234", 0.1, 0.1));
 
         // Assert
         Assert.False(upsertResponse.Success);
-        Assert.Null(upsertResponse.Location);
+        Assert.Null(upsertResponse.Item);
     }
 
     [Fact]
@@ -64,11 +64,11 @@ public class LocationServiceTests
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbLocationService.LocationQueryResponse getResponse = await locationService.GetPoint(testId);
+        GeoQueryResponse<GeoPointModel> getResponse = await locationService.GetItem(testId);
 
         // Assert
         Assert.True( getResponse.Success );
-        Assert.Equal(testId, getResponse.Location.Id);
+        Assert.Equal(testId, getResponse.Item.Id);
         mockContainer.Verify(container => container.ReadItemAsync<GeoPointModel>(testId, It.IsAny<PartitionKey>(), null, default), "When getting the location, the container should be queried with the provided id.");
     }
 
@@ -84,11 +84,11 @@ public class LocationServiceTests
         CosmosDbLocationService locationService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbLocationService.LocationQueryResponse upsertResponse = await locationService.GetPoint(testId);
+        GeoQueryResponse<GeoPointModel> upsertResponse = await locationService.GetItem(testId);
 
         // Assert
         Assert.False(upsertResponse.Success);
-        Assert.Null(upsertResponse.Location);
+        Assert.Null(upsertResponse.Item);
         mockContainer.Verify(container => container.ReadItemAsync<GeoPointModel>(testId, It.IsAny<PartitionKey>(), null, default), "When getting the location, the container should be queried with the provided id.");
     }
 }

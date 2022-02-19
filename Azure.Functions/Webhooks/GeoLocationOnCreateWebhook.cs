@@ -68,7 +68,7 @@ namespace Accelerator.GeoLocation.Webhooks
                     latitudeDouble
                 );
 
-                ICosmosDbLocationService.LocationQueryResponse response = await _cosmosService.UpsertPoint(point);
+                GeoQueryResponse<GeoPointModel> response = await _cosmosService.UpsertItem(point);
 
                 if(! response.Success)
                 {

@@ -1,4 +1,5 @@
 ﻿using Accelerator.GeoLocation.Contracts;
+using Accelerator.GeoLocation.Models;
 using Accelerator.GeoLocation.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
@@ -23,8 +24,9 @@ namespace Accelerator.GeoLocation
                     })
                 .Build());
 
-            builder.Services.AddSingleton<ICosmosDbLocationService, CosmosDbLocationService>();
-
+            builder.Services.AddSingleton(typeof(IGeoQueryable<GeoPointModel>), typeof(CosmosDbServiceBase<GeoPointModel>));
+            builder.Services.AddSingleton(typeof(ICosmosDbLocationService), typeof(CosmosDbLocationService));
+            builder.Services.AddSingleton(typeof(ICosmosDbRegionService), typeof(CosmosDbRegionService));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+using Accelerator.GeoLocation.Contracts;
 using Microsoft.Azure.Cosmos.Spatial;
 using System;
 
@@ -8,7 +9,7 @@ namespace Accelerator.GeoLocation.Models;
 /// Represents a point on teh surface of the earth. Each GeoPointModel corresponds to an entry in the CRM, and is synced one-way.
 /// Thus changes in the CRM will be reflected in the corresponding entry in the Cosmos Db.
 /// </summary>
-public class GeoPointModel
+public class GeoPointModel : IModel
 {
     /// <summary>
     /// The Id in the Cosmos Db.

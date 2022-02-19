@@ -52,7 +52,7 @@ public class CreateGeoLocation
                     requestData.Latitude
                 );
 
-            ICosmosDbLocationService.LocationQueryResponse response = await _cosmosService.UpsertPoint(point);
+            GeoQueryResponse<GeoPointModel> response = await _cosmosService.UpsertItem(point);
 
             if (response.Success)
             {

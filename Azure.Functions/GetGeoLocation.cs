@@ -41,13 +41,13 @@ namespace Accelerator.GeoLocation
         {
             try
             {
-                ICosmosDbLocationService.LocationQueryResponse response = await _cosmosService.GetPoint(id);
+                GeoQueryResponse<GeoPointModel> response = await _cosmosService.GetItem(id);
                 if (response.Success)
                 {
                     SingleGeoPointViewModel points = new SingleGeoPointViewModel { 
                                                             Id = id,
-                                                            Longitude = response.Location.LocationDefinition.Position.Longitude,
-                                                            Latitude = response.Location.LocationDefinition.Position.Latitude
+                                                            Longitude = response.Item.LocationDefinition.Position.Longitude,
+                                                            Latitude = response.Item.LocationDefinition.Position.Latitude
                                                       };
 
                     return new OkObjectResult(points);

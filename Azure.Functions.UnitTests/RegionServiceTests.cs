@@ -31,12 +31,12 @@ public class RegionServiceTests
         CosmosDbRegionService locationService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbRegionService.RegionQueryResponse upsertResponse =
-            await locationService.UpsertRegion(upsertRegion);
+        GeoQueryResponse<GeoRegionModel> upsertResponse =
+            await locationService.UpsertItem(upsertRegion);
 
         // Assert
         Assert.True(upsertResponse.Success);
-        Assert.NotNull(upsertResponse.Region);
+        Assert.NotNull(upsertResponse.Item);
         mockContainer.Verify(container => container.UpsertItemAsync<GeoRegionModel>(upsertRegion, It.IsAny<PartitionKey>(), null, default), "When upserting the region, the container should attempt to upsert data into the database." );
     }
 
@@ -57,12 +57,12 @@ public class RegionServiceTests
         CosmosDbRegionService regionService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbRegionService.RegionQueryResponse upsertResponse =
-            await regionService.UpsertRegion(upsertRegion);
+        GeoQueryResponse<GeoRegionModel> upsertResponse =
+            await regionService.UpsertItem(upsertRegion);
 
         // Assert
         Assert.False(upsertResponse.Success);
-        Assert.Null(upsertResponse.Region);
+        Assert.Null(upsertResponse.Item);
         mockContainer.Verify(container => container.UpsertItemAsync<GeoRegionModel>(upsertRegion, It.IsAny<PartitionKey>(), null, default), "When upserting the region, the container should attempt to upsert data into the database.");
     }
 
@@ -85,11 +85,11 @@ public class RegionServiceTests
         CosmosDbRegionService locationService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbRegionService.RegionQueryResponse getResponse = await locationService.GetRegion(testId);
+        GeoQueryResponse<GeoRegionModel> getResponse = await locationService.GetItem(testId);
 
         // Assert
         Assert.True(getResponse.Success);
-        Assert.Equal(testId, getResponse.Region.Id);
+        Assert.Equal(testId, getResponse.Item.Id);
         mockContainer.Verify(container => container.ReadItemAsync<GeoRegionModel>(testId, It.IsAny<PartitionKey>(), null, default), "When getting the region, the container should be queried with the provided id.");
     }
 
@@ -105,11 +105,11 @@ public class RegionServiceTests
         CosmosDbRegionService regionService = new(mockCosmosClient.Object);
 
         // Act
-        ICosmosDbRegionService.RegionQueryResponse upsertResponse = await regionService.GetRegion(testId);
+        GeoQueryResponse<GeoRegionModel> upsertResponse = await regionService.GetItem(testId);
 
         // Assert
         Assert.False(upsertResponse.Success);
-        Assert.Null(upsertResponse.Region);
+        Assert.Null(upsertResponse.Item);
         mockContainer.Verify(container => container.ReadItemAsync<GeoRegionModel>(testId, It.IsAny<PartitionKey>(), null, default), "When getting the region, the container should be queried with the provided id.");
     }
 }
