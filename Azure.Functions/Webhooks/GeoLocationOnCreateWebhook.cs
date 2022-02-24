@@ -36,7 +36,6 @@ namespace Accelerator.GeoLocation.Webhooks
         [OpenApiOperation(operationId: "Run", tags: new[] { "webhooks" }, Description = "Webhook that syncs data from Dynamics to the geolocation database.")]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The received webhook is aknowledged with a 200.")]
-
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
         {
