@@ -123,7 +123,7 @@
     <Compile Include="CrmPluginRegistrationAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteRequestUtils.cs" />
-    <Compile Include="SyncGeoRegion.cs" />
+    <Compile Include="SyncGeoLocation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -14,11 +14,11 @@ namespace GeoLocation.Plugins
     //"niblo_longitude,niblo_latitude", "Create Step", 1, IsolationModeEnum.Sandbox,
     //Description = "Sync geolocations to the database when created or updated.",
     //SecureConfiguration = "Add to config file, add config file to gitignore")]
-    public sealed class SyncGeoRegion : IPlugin
+    public sealed class SyncGeoLocation : IPlugin
     {
         private string serviceUri;
 
-        public SyncGeoRegion(string unsecureConfig, string secureUrl)
+        public SyncGeoLocation(string unsecureConfig, string secureUrl)
         {
             if (string.IsNullOrEmpty(secureUrl))
             {
