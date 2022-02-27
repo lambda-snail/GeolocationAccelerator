@@ -24,21 +24,18 @@ public class GeoRegionModel : IModel
 
     public GeoRegionModel(string id, List<CoordinatePair> coordinates)
     {
-        if(string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(id))
         {
             throw new ArgumentNullException("Error: Parameter cannot be null or empty: " + nameof(id));
         }
 
         Id = id;
 
-        if(coordinates.Count == 0)
+        if (coordinates != null)
         {
-            throw new ArgumentException("Error: No coordinates specified.");
+            // TODO: Benchmark this Linq 
+            IList<Position> positions = coordinates.Select<CoordinatePair, Position>(c => new Position(c.Longitude, c.Latitude)).ToList();
+            AreaDefinition = new Polygon(positions);
         }
-        
-        // TODO: Benchmark this!
-        IList<Position> positions = coordinates.Select<CoordinatePair, Position>(c => new Position(c.Longitude, c.Latitude)).ToList();
-
-        AreaDefinition = new Polygon(positions);
     }
 }
