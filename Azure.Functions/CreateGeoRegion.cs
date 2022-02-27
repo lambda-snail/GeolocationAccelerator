@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Accelerator.GeoLocation.Contracts;
 using Accelerator.GeoLocation.Models;
 using Accelerator.GeoLocation.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -22,10 +23,12 @@ namespace Accelerator.GeoLocation
     public class CreateGeoRegion
     {
         private readonly ILogger<CreateGeoRegion> _logger;
+        private readonly ICosmosDbRegionService _service;
 
-        public CreateGeoRegion(ILogger<CreateGeoRegion> log)
+        public CreateGeoRegion(ILogger<CreateGeoRegion> log, ICosmosDbRegionService service)
         {
             _logger = log;
+            _service = service;
         }
 
         [FunctionName("CreateGeoRegion")]
@@ -46,13 +49,20 @@ namespace Accelerator.GeoLocation
                 List<CoordinatePair> coordinateList = ParseCoordinateList(intermediate);
 
                 GeoRegionModel region = new(id, coordinateList);
-
-                return new OkObjectResult(region.ToString());
+                GeoQueryResponse<GeoRegionModel> response = await _service.UpsertItem(region);
+                if(response.Success)
+                {
+                    return new OkObjectResult(region);
+                }
+                else
+                {
+                    return new BadRequestResult();
+                }
             }
             catch (ArgumentException e)
             {
                 _logError(e);
-                return new ObjectResult(HttpStatusCode.BadRequest);
+                return new BadRequestResult();
             }
             catch (Exception e)
             {

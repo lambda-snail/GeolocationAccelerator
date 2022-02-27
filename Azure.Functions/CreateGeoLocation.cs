@@ -65,6 +65,7 @@ public class CreateGeoLocation
         }
         catch(Exception e)
         {
+            _logger.LogError(e.Message);
             return new ObjectResult(HttpStatusCode.InternalServerError);
         }
     }
