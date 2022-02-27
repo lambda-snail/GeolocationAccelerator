@@ -40,11 +40,20 @@ public class CosmosDbServiceBase<T> : IGeoQueryable<T> where T : IModel
 
     public async Task<GeoQueryResponse<T>> GetItem(string id)
     {
-        ItemResponse<T> response = await _container.ReadItemAsync<T>(id, new PartitionKey(id));
-
-        if (response.StatusCode == HttpStatusCode.OK)
+        try
         {
-            return new GeoQueryResponse<T>(response.Resource, true);
+            ItemResponse<T> response = await _container.ReadItemAsync<T>(id, new PartitionKey(id));
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return new GeoQueryResponse<T>(response.Resource, true);
+            }
+        }
+        catch(CosmosException e) when (e.StatusCode == HttpStatusCode.NotFound) { }
+        catch(Exception e)
+        {
+            // TODO: add logging here
+            throw;
         }
 
         return new GeoQueryResponse<T>(default, false);
