@@ -11,16 +11,25 @@ The tables are very bare-bones, but can of course be extended with more bussines
 
 ## Roadmap
 
+A progress report can be found in the [projects section](https://github.com/users/lambda-snail/projects/1) of this repo. The immediate goals are as follows.
+
 ### Version 1.0
 
 - A few simple Dynamics tables that define locations and regions using latitude and longitude coordinates.
-- A Cosmos Db that enables geospatial queries.
-- A layer of Azure functions that sits between Dynamics and Cosmos Db.
-- Also there will be either a plugin or javascript functions (or both) that allows us to interact with the layer in Azure.
+- An API that enables geospatial queries - powered by a cosmos db and some simple Azure functions.
+- A simple javascript (typescript) library that provides a service to interact with the layer in Azure.
 
 ### Version 1.1
 
 - Graphic visualization of locations and regions on a map.
+
+### Version 1.2
+
+- Refactor to facilitate configuration, in particular which fields are synced to the database.
+
+# Deployment and configuration
+
+The API is not yet in a useable state. For version 1.0, configuration will be done by altering the source code. For version 1.2+ some kind of mechanism to facilitate configuration will be implemented. Storing more data from the CRM in cosmos will allow more interesting queries, so making that process simpler is certainly on my roadmap!
 
 ## Notes
 
